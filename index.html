@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#123e35" />
+<meta name="description" content="건국대학교 일감호 수질개선에 대한 재학생의 지불의사 조사 — 생태경제학 특강 학술과제" />
+<title>일감호 수질개선 지불의사 조사</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="config.js"></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="header-inner"><div class="brand"><span class="brand-dot"></span> 생태경제학 특강 · 학술연구 설문</div><div class="header-note">건국대학교 일감호</div></div></header>
+<main class="shell">
+<div class="hero"><span class="eyebrow">RESEARCH SURVEY</span><h1>일감호 수질개선에 대한<br />재학생의 지불의사 조사</h1><p>일감호의 더 나은 환경에 대한 학생들의 의견을 듣습니다.</p></div>
+<div class="progress-wrap" aria-label="설문 진행률"><div class="progress-info"><span id="stepLabel">연구 안내</span><span id="progressText">1 / 5</span></div><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div>
+<form id="surveyForm" novalidate>
+<section id="step0" class="step active" aria-labelledby="introTitle">
+<div class="panel"><div class="section-kicker">01 · 참여 안내</div><h2 id="introTitle">설문 참여 안내</h2>
+<p>안녕하세요.<br>저는 건국대학교 산림조경학과 박사과정 송승현입니다.</p>
+<p>서울대학교 산림과학부 대학원 수업인 「생태경제학 특강」 수업의 일환으로, 건국대학교 서울캠퍼스 학부 재학생을 대상으로 일감호 수질개선에 대한 인식과 추가 비용 부담 의사를 파악하기 위해 본 설문을 실시하고자 합니다.</p>
+<p>조사에서는 <strong>실제 시행이 결정되지 않은 가상의 수질개선 사업</strong>을 제시하고, 해당 사업에 대한 지불의사를 질문합니다. 정답은 없으며, 평소 생각과 개인의 경제적 여건을 고려하여 응답해 주시기 바랍니다.</p>
+<p>응답은 연구 및 수업 과제의 통계분석 목적으로만 활용합니다. 성명·학번·이메일을 설문 문항으로 수집하지 않으며, 참여는 자발적이고 제출 전 언제든 중단할 수 있습니다. 제출 후에는 신원확인 정보를 수집하지 않으므로 개별 응답을 찾아 삭제하기 어려울 수 있습니다. 서비스 운영 과정의 기술적 접속 정보는 GitHub 및 Google 측에서 처리할 수 있습니다.</p>
+<div class="fact-grid"><div><span>조사 대상</span><strong>서울캠퍼스 학부 재학생</strong></div><div><span>예상 소요시간</span><strong>약 5~7분</strong></div><div><span>조사 내용</span><strong>이용 경험 · WTP · 환경 인식</strong></div></div>
+<div class="question"><p class="question-title">연구 목적과 내용을 이해하였으며, 자발적으로 참여하는 데 동의하십니까? <span class="required">필수</span></p><label class="choice"><input type="radio" name="consent" value="yes" required><span>예, 동의합니다.</span></label><label class="choice"><input type="radio" name="consent" value="no"><span>아니오, 동의하지 않습니다.</span></label></div>
+<p class="micro">문의: <span id="contactEmail">연구자 이메일 등록 예정</span> · 실제 부담금 부과와 무관한 학술연구입니다.</p>
+</div></section>
+<section id="step1" class="step" aria-labelledby="sectionAB"><div class="panel"><div class="section-kicker">02 · 조사대상 및 이용 경험</div><h2 id="sectionAB">A. 조사 대상 확인</h2>
+<div class="question"><p class="question-title">A1. 귀하께서는 현재 건국대학교 서울캠퍼스 학부과정에 재학 중이십니까? <span class="required">필수</span></p><label class="choice"><input type="radio" name="eligible" value="yes" required><span>예</span></label><label class="choice"><input type="radio" name="eligible" value="no"><span>아니오</span></label></div><div class="rule"></div>
+<h2>B. 일감호 이용행태 및 수질 인식</h2>
+<div class="question"><p class="question-title">B1. 최근 1개월 동안 일감호 주변을 방문하거나 지나간 빈도는 어느 정도입니까? <span class="required">필수</span></p><p class="hint">산책이나 휴식뿐 아니라 통학 및 교내 이동 중 일감호 주변을 지나간 경우도 포함합니다.</p><div class="choices" id="visitFreqChoices"></div></div>
+<div class="question"><p class="question-title">B2. 일감호 주변을 방문하거나 이용하는 주된 목적은 무엇입니까? <span class="required">필수</span></p><p class="hint">복수응답이 가능합니다. '방문한 적 없음'은 다른 항목과 함께 선택할 수 없습니다.</p><div class="choices" id="visitPurposeChoices"></div><label class="text-field" id="purposeOtherWrap" hidden>기타 이용 목적<input id="purposeOther" maxlength="120" placeholder="간단히 입력해 주세요"></label></div>
+<div class="question"><p class="question-title">B3. 현재 일감호의 전반적인 수질 상태를 어떻게 평가하십니까? <span class="required">필수</span></p><div class="choices" id="qualityChoices"></div></div>
+<div class="question"><p class="question-title">B4. 최근 1년간 다음과 같은 현상을 직접 경험한 빈도는 어느 정도입니까? <span class="required">각 항목 필수</span></p><p class="hint">직접 관찰한 경험을 기준으로 응답해 주세요.</p><div id="pollutionGroups"></div></div>
+</div></section>
+<section id="step2" class="step" aria-labelledby="sectionC"><div class="panel"><div class="section-kicker">03 · 가상 시나리오</div><h2 id="sectionC">C. 수질개선 시나리오 및 지불의사</h2>
+<div class="info-box"><strong>일감호 수질관리 배경</strong><p>일감호는 건국대학교 서울캠퍼스에 위치한 인공호수로, 학생과 교직원, 지역주민 등이 이용하는 공간입니다. 과거 조사에서는 부영양화와 퇴적물로 인한 수질관리 문제가 보고되었으며, 2024년 교내 언론에서도 당시 녹조와 악취 등의 문제가 보도된 바 있습니다. 현재 건국대학교는 일감호정화기금을 운용하며 유지관리 예산을 편성하고 있습니다.</p></div>
+<h3>가상 시나리오</h3><p>본 설문에서는 건국대학교가 기존의 일감호 유지관리를 지속하는 경우와 별도의 수질개선 사업을 추가로 시행하는 경우를 비교합니다.</p><p>추가 사업에는 <strong>퇴적환경 관리, 호수 내 오염물질 저감, 수질 모니터링 강화</strong> 등이 포함된다고 가정합니다. 이 사업을 통해 <strong>녹조와 악취 발생 빈도가 현재보다 감소하고, 개선된 환경 상태가 사업 완료 후 3년간 유지</strong>된다고 가정합니다.</p>
+<div class="visual-panel"><div class="scene"><div class="scene-heading"><span>① 기존 유지관리</span></div><svg viewBox="0 0 380 188" aria-label="기존 유지관리 상태를 나타내는 가상 개념도" role="img"><rect width="380" height="188" rx="15" fill="#e3ebe1"/><path d="M0 70C70 40 130 60 190 73S320 94 380 68V188H0Z" fill="#85b5af"/><path d="M0 123C86 108 140 136 218 118S320 118 380 109" fill="none" stroke="#679b92" stroke-width="5"/><path d="M0 157C95 140 140 166 220 153S310 149 380 143" fill="none" stroke="#6b9e92" stroke-width="4"/><g fill="#73996c" opacity=".8"><ellipse cx="74" cy="112" rx="26" ry="9"/><ellipse cx="150" cy="144" rx="25" ry="10"/><ellipse cx="257" cy="109" rx="29" ry="10"/><ellipse cx="326" cy="148" rx="23" ry="8"/></g><path d="M0 178Q100 161 194 177T380 171V188H0Z" fill="#b59e7f"/></svg><p>녹조·악취 발생 가능성 유지</p></div><div class="scene"><div class="scene-heading"><span>② 추가 수질개선</span></div><svg viewBox="0 0 380 188" aria-label="추가 수질개선 후 상태를 나타내는 가상 개념도" role="img"><rect width="380" height="188" rx="15" fill="#e3ebe1"/><path d="M0 70C70 40 130 60 190 73S320 94 380 68V188H0Z" fill="#78b4bd"/><path d="M0 123C86 108 140 136 218 118S320 118 380 109" fill="none" stroke="#b4d8d9" stroke-width="5"/><path d="M0 157C95 140 140 166 220 153S310 149 380 143" fill="none" stroke="#b3d8d8" stroke-width="4"/><g fill="#73996c" opacity=".6"><ellipse cx="78" cy="113" rx="14" ry="5"/></g><path d="M0 178Q100 161 194 177T380 171V188H0Z" fill="#b59e7f"/></svg><p>녹조·악취 발생 빈도 감소 가정</p></div></div>
+<p class="illustration-caption">연구자가 구성한 가상 상황을 표현한 개념도로, 실제 일감호의 현재 수질이나 검증된 개선 효과를 나타내지 않습니다.</p>
+<div class="caution"><strong>중요 안내</strong><p>이 사업과 3년간의 개선 효과는 연구를 위한 가정입니다. 실제 사업 시행이나 개선 효과가 확정·검증된 것은 아닙니다.</p></div>
+<h3>비용 부담 방식</h3><p>학교의 기존 일감호정화기금 등 기존 재원과 별도의 사업재원을 활용해 추가적인 수질개선 사업을 시행하고, <strong>사업비 일부를 서울캠퍼스 학부 재학생이 공동 부담</strong>한다고 가정합니다.</p><ul class="narrative-list"><li>모든 서울캠퍼스 학부 재학생에게 등록금과 별도의 <strong>일감호 수질개선 부담금을 단 한 번</strong> 부과합니다.</li><li>이후 학기 또는 학년도에 반복 부과되지 않습니다.</li><li>장학금 수혜와 관계없이 동일한 금액을 부과합니다.</li><li>부담금은 추가 수질개선 사업에만 사용된다고 가정합니다.</li></ul>
+<div class="bill"><div class="bill-top"><div><span class="bill-small">가상 등록금 고지서</span><h3>등록금 납부 내역</h3></div><span class="fake-stamp">연구용 예시 · 실제 고지서 아님</span></div><div class="bill-line"><span>수업료 (예시)</span><strong>3,650,000원</strong></div><div class="bill-line"><span>장학금 감면 (예시)</span><strong>−1,000,000원</strong></div><div class="bill-line highlight"><span>일감호 수질개선 부담금</span><strong id="billBid">—</strong></div><div class="bill-total"><span>총 납부금액</span><strong id="billTotal">—</strong></div><p>수업료와 장학금은 가상 예시입니다. 조사 대상 금액은 추가되는 수질개선 부담금입니다.</p></div>
+<div class="question bid-question"><p class="question-title">C1. 위의 추가적인 일감호 수질개선 사업을 위해 등록금과 별도로 <strong id="firstBidText">—</strong>을 한 번 납부해야 한다면 납부하시겠습니까? <span class="required">필수</span></p><p class="hint">실제 본인 또는 가계의 경제적 여건과 다른 지출(식비·여가비 등)에 사용할 수 있는 금액을 함께 고려해 주세요.</p><div class="choices"><label class="choice"><input type="radio" name="answer1" value="1"><span>예, 납부하겠습니다.</span></label><label class="choice"><input type="radio" name="answer1" value="0"><span>아니오, 납부하지 않겠습니다.</span></label></div></div>
+<div id="secondBidBlock" class="question conditional" hidden><p class="question-title" id="secondBidQuestion">C1-1. 후속 질문</p><div class="choices"><label class="choice"><input type="radio" name="answer2" value="1"><span>예, 납부하겠습니다.</span></label><label class="choice"><input type="radio" name="answer2" value="0"><span>아니오, 납부하지 않겠습니다.</span></label></div></div>
+<div id="noNoBlock" class="conditional" hidden><div class="question"><p class="question-title">C1-3. 가장 낮은 제시금액보다 적은 금액이라면 납부할 의사가 있으십니까? <span class="required">필수</span></p><div class="choices" id="zeroWtpChoices"></div></div><div class="question"><p class="question-title">C1-4. 추가 부담금을 납부하지 않겠다고 응답한 가장 주된 이유는 무엇입니까? <span class="required">필수</span></p><div class="choices" id="refusalChoices"></div><label class="text-field" id="refusalOtherWrap" hidden>기타 이유<input id="refusalOther" maxlength="250" placeholder="간단히 입력해 주세요"></label></div></div>
+</div></section>
+<section id="step3" class="step" aria-labelledby="sectionDE"><div class="panel"><div class="section-kicker">04 · 인식 및 일반 특성</div><h2 id="sectionDE">D. 환경보전 및 일감호에 대한 인식</h2>
+<div class="question"><p class="question-title">D1. 일감호의 현재 유지관리와 별도로 추가적인 수질개선이 필요하다고 생각하십니까? <span class="required">필수</span></p><div class="choices" id="needChoices"></div></div>
+<div class="question"><p class="question-title">D2. 다음 환경보전에 관한 생각에 얼마나 동의하십니까? <span class="required">각 항목 필수</span></p><div id="environmentGroups"></div></div>
+<div class="question"><p class="question-title">D3. 다음 일감호에 관한 생각에 얼마나 동의하십니까? <span class="required">각 항목 필수</span></p><div id="attachmentGroups"></div></div>
+<div class="question"><p class="question-title">D4. 가상의 수질개선 사업이 시행된다면, 학교가 부담금을 해당 사업의 목적에 맞게 집행할 것이라고 생각하십니까? <span class="required">필수</span></p><div class="choices" id="trustChoices"></div></div>
+<div class="rule"></div><h2>E. 응답자의 일반적 특성</h2>
+<div class="question"><p class="question-title">E1. 현재 학년은 어떻게 되십니까? <span class="required">필수</span></p><div class="choices" id="yearChoices"></div></div>
+<div class="question"><p class="question-title">E2. 소속 전공은 다음 중 어느 계열에 해당합니까? <span class="required">필수</span></p><div class="choices" id="collegeChoices"></div></div>
+<div class="question"><p class="question-title">E3. 학기 중 주로 거주하는 형태는 무엇입니까? <span class="required">필수</span></p><div class="choices" id="residenceChoices"></div></div>
+<div class="question"><p class="question-title">E4. 최근 3개월간 등록금과 주거비를 제외하고, 한 달에 평균적으로 사용한 생활비는 얼마입니까? <span class="required">필수</span></p><p class="hint">식비·교통비·여가비 등의 지출을 포함합니다.</p><div class="choices" id="expenseChoices"></div></div>
+<div class="question"><p class="question-title">E5. 이번 학기 등록금성 장학금으로 수업료를 어느 정도 감면받았습니까? <span class="required">필수</span></p><p class="hint">생활비성 장학금은 제외해 주세요.</p><div class="choices" id="scholarshipChoices"></div></div>
+<div class="question"><p class="question-title">E6. 현재 본인 또는 가계가 부담하는 대학 등록금의 경제적 부담은 어느 정도입니까? <span class="required">필수</span></p><div class="choices" id="burdenChoices"></div></div>
+</div></section>
+<section id="step4" class="step" aria-labelledby="reviewTitle"><div class="panel"><div class="section-kicker">05 · 최종 확인</div><h2 id="reviewTitle">응답을 제출하시겠습니까?</h2><p>제출 후에는 개별 응답의 수정이나 철회가 어려울 수 있습니다. 이전 단계로 돌아가 응답을 확인할 수 있습니다.</p><div id="reviewSummary" class="review-box"></div><label class="choice final-confirm"><input type="checkbox" id="confirmSubmission"><span>응답 내용을 확인했으며, 익명 통계분석 자료로 제출하는 데 동의합니다.</span></label><div id="submissionNote" class="submit-note" role="status" aria-live="polite"></div></div></section>
+</form>
+<div id="navigation" class="navigation"><button type="button" id="backBtn" class="btn btn-ghost" hidden>이전</button><button type="button" id="nextBtn" class="btn btn-primary">다음 <span aria-hidden="true">→</span></button></div>
+<div id="endScreen" class="end-screen" hidden><div class="panel centered"><div class="end-icon" id="endIcon">✓</div><h2 id="endTitle">감사합니다</h2><p id="endMessage"></p><p class="micro" id="endFoot"></p></div></div>
+</main><footer class="site-footer">건국대학교 일감호 수질개선에 대한 재학생의 지불의사 조사<br>생태경제학 특강 · 학술연구용 · 실제 대학 정책과 무관</footer>
+<iframe id="submissionFrame" name="submissionFrame" title="설문 응답 전송" hidden></iframe>
+</body></html>
