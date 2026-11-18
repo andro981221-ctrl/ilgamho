@@ -46,14 +46,47 @@ if(n===3)return requires([['improve_need','D1'],['env_1','D2 첫 번째 항목']
 function updateReview(){const a=selected('answer1');const b=selected('answer2');const code=(a==='1'?'Y':'N')+(b==='1'?'Y':'N');$('#reviewSummary').innerHTML=`<div>응답자: <strong>서울캠퍼스 학부 재학생</strong></div><div>설문 유형: <strong>${bid.code}</strong></div><div>최초 제시금액: <strong>${format(bid.first)}</strong></div><div>후속 제시금액: <strong>${format(a==='1'?bid.high:bid.low)}</strong></div><div>응답 유형: <strong>${code}</strong></div><div>납부 횟수: <strong>1회</strong> · 가상 효과 유지기간: <strong>3년</strong></div>`;}
 function data(){const a=selected('answer1'),b=selected('answer2');const out={schema_version:'1.0',response_id:submissionToken,bid_version:bid.code,bid1:bid.first,bid2:a==='1'?bid.high:bid.low,answer1:+a,answer2:+b,response_pattern:(a==='1'?'Y':'N')+(b==='1'?'Y':'N'),visit_freq:+selected('visit_freq'),visit_purpose:selections('visit_purpose').map(Number),visit_purpose_other:$('#purposeOther').value.trim(),quality_percep:+selected('quality_percep'),pollution_algae:+selected('pollution_algae'),pollution_odor:+selected('pollution_odor'),pollution_debris:+selected('pollution_debris'),zero_wtp:a==='0'&&b==='0'?+selected('zero_wtp'):'',refusal_reason:a==='0'&&b==='0'?+selected('refusal_reason'):'',refusal_other:$('#refusalOther').value.trim(),improve_need:+selected('improve_need'),env_1:+selected('env_1'),env_2:+selected('env_2'),attach_1:+selected('attach_1'),attach_2:+selected('attach_2'),project_trust:+selected('project_trust'),year:+selected('year'),college:+selected('college'),residence:+selected('residence'),monthly_expense:+selected('monthly_expense'),scholarship:+selected('scholarship'),tuition_burden:+selected('tuition_burden'),scenario_years:3,payment_count:1};return out;}
 function terminate(msg){done=true;$('#surveyForm').hidden=true;$('#navigation').hidden=true;$('.progress-wrap').hidden=true;$('#endScreen').hidden=false;$('#endIcon').textContent='—';$('#endTitle').textContent='설문이 종료되었습니다';$('#endMessage').textContent=msg;}
-function success(){submitting=false;done=true;sessionStorage.removeItem(key);$('#surveyForm').hidden=true;$('#navigation').hidden=true;$('.progress-wrap').hidden=true;$('#endScreen').hidden=false;$('#endIcon').textContent='✓';$('#endTitle').textContent='응답이 저장되었습니다';$('#endMessage').textContent='설문에 참여해 주셔서 감사합니다. 응답이 구글 스프레드시트에 기록되었다는 확인을 받았습니다.';$('#rafflePanel').hidden=false;}
-function submit(){if(submitting)return;const url=(cfg.scriptUrl||'').trim();if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(url)){$('#submissionNote').textContent='아직 응답 저장 주소가 연결되지 않았습니다. 관리자에게 알려주세요.';return;}
-submitting=true;$('#nextBtn').disabled=true;$('#nextBtn').textContent='제출 중…';$('#submissionNote').textContent='응답 저장 확인 중입니다. 페이지를 닫지 마세요.';submissionToken=submissionToken||(crypto.randomUUID?crypto.randomUUID():[...crypto.getRandomValues(new Uint32Array(4))].join('-'));
-const frame=$('#submissionFrame');const form=document.createElement('form');form.method='POST';form.action=url;form.target='submissionFrame';form.style.display='none';const field=document.createElement('input');field.type='hidden';field.name='payload';field.value=JSON.stringify(data());form.append(field);document.body.append(form);form.submit();form.remove();
-// Apps Script의 HtmlService 응답이 top 창으로 postMessage하여 실제 저장 성공을 알립니다.
-// 시간 제한은 네트워크 장애에 따른 경고일 뿐, 제출 실패의 확증이 아닙니다.
-window.setTimeout(()=>{if(!done&&submitting){submitting=false;$('#nextBtn').disabled=false;$('#nextBtn').textContent='응답 제출';$('#submissionNote').textContent='서버에서 저장 확인을 받지 못했습니다. 이미 저장되었을 가능성도 있습니다. 잠시 후 시트를 확인하거나 관리자에게 문의해 주세요. 같은 버튼을 다시 누르면 중복 방지 ID로 처리됩니다.';}},20000);
+function success(){submitting=false;done=true;sessionStorage.removeItem(key);$('#surveyForm').hidden=true;$('#navigation').hidden=true;$('.progress-wrap').hidden=true;$('#endScreen').hidden=false;$('#endIcon').textContent='✓';$('#endTitle').textContent='응답이 저장되었습니다';$('#endMessage').textContent='설문에 참여해 주셔서 감사합니다. 구글 스프레드시트에서 응답 저장이 확인되었습니다.';$('#rafflePanel').hidden=false;window.scrollTo({top:0,behavior:'smooth'});}
+// Google Apps Script의 HTML 응답은 sandbox iframe 내에서 실행될 수 있어 상위 페이지에
+// postMessage가 도달하지 않는 경우가 있습니다. 저장된 응답 UUID를 JSONP로 재확인합니다.
+let verifyTimer=null,verifyCount=0,verifyBusy=false;
+function verifyStored(){
+ if(done||!submitting||verifyBusy||!submissionToken)return;
+ verifyBusy=true;
+ const cb='ilgamConfirm_'+String(Date.now())+'_'+String(++verifyCount);
+ const script=document.createElement('script');
+ let finished=false;
+ const cleanup=()=>{if(finished)return;finished=true;verifyBusy=false;delete window[cb];script.remove();};
+ window[cb]=result=>{cleanup();if(result&&result.saved===true)success();};
+ script.onerror=cleanup;
+ const url=(cfg.scriptUrl||'').trim();
+ script.src=url+'?action=status&response_id='+encodeURIComponent(submissionToken)+'&callback='+encodeURIComponent(cb);
+ document.head.append(script);
+ window.setTimeout(cleanup,6000);
 }
-window.addEventListener('message',event=>{if(!submitting||done)return;try{const origin=new URL(event.origin).hostname;if(!(origin==='script.google.com'||origin==='script.googleusercontent.com'||origin.endsWith('.googleusercontent.com')))return;}catch{return;}const v=event.data;if(!v||v.source!=='ILGAM_SURVEY_BACKEND'||v.response_id!==submissionToken)return;if(v.ok===true){success();}else{submitting=false;$('#nextBtn').disabled=false;$('#nextBtn').textContent='응답 제출';$('#submissionNote').textContent='저장 중 오류가 발생했습니다. 서버 설정을 확인해 주세요.';}});
-$('#nextBtn').addEventListener('click',()=>{if(done||submitting||!validate(current))return;if(current===4)submit();else showStep(current+1);});$('#backBtn').addEventListener('click',()=>{if(!submitting&&current>0)showStep(current-1);});showStep(0);
+function submit(){
+ if(submitting)return;const url=(cfg.scriptUrl||'').trim();
+ if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(url)){$('#submissionNote').textContent='아직 응답 저장 주소가 연결되지 않았습니다. 관리자에게 알려주세요.';return;}
+ submitting=true;$('#nextBtn').disabled=true;$('#nextBtn').textContent='저장 확인 중…';$('#submissionNote').textContent='응답을 전송하고 구글 스프레드시트의 저장 여부를 확인하는 중입니다.';
+ submissionToken=submissionToken||(crypto.randomUUID?crypto.randomUUID():[...crypto.getRandomValues(new Uint32Array(4))].join('-'));
+ const frame=$('#submissionFrame');
+ frame.addEventListener('load',()=>{if(submitting&&!done)window.setTimeout(verifyStored,500);},{once:true});
+ const form=document.createElement('form');form.method='POST';form.action=url;form.target='submissionFrame';form.style.display='none';
+ const field=document.createElement('input');field.type='hidden';field.name='payload';field.value=JSON.stringify(data());form.append(field);document.body.append(form);form.submit();form.remove();
+ // 응답 확인 요청이 느릴 수 있어 일정 간격으로 재확인하되 제출을 재전송하지는 않습니다.
+ [3000,6500,11000,16500].forEach(ms=>window.setTimeout(verifyStored,ms));
+ window.setTimeout(()=>{if(!done&&submitting){
+   submitting=false;$('#nextBtn').disabled=false;$('#nextBtn').textContent='저장 여부 다시 확인';
+   $('#submissionNote').textContent='서버에서 저장 여부를 확인하지 못했습니다. 응답이 이미 저장되었을 수 있으니 다시 제출하지 마세요. 아래 버튼으로 저장 여부를 조회할 수 있습니다.';
+ }},23000);
+}
+// 재확인 버튼은 재전송이 아닌 상태 조회를 수행. 확인된 경우에만 완료 화면으로 이동.
+function recheck(){
+ if(done||submitting)return;
+ submitting=true;$('#nextBtn').disabled=true;$('#nextBtn').textContent='확인 중…';
+ $('#submissionNote').textContent='기존 응답의 저장 여부만 다시 확인합니다. 새로 제출하지 않습니다.';
+ verifyStored();window.setTimeout(()=>{if(!done&&submitting){submitting=false;$('#nextBtn').disabled=false;$('#nextBtn').textContent='저장 여부 다시 확인';$('#submissionNote').textContent='저장 확인에 실패했습니다. 연구자에게 문의해 주세요. 응답 제출을 반복하지 마세요.';}},7000);
+}
+window.addEventListener('message',event=>{if(!submitting||done)return;try{const origin=new URL(event.origin).hostname;if(!(origin==='script.google.com'||origin==='script.googleusercontent.com'||origin.endsWith('.googleusercontent.com')))return;}catch{return;}const v=event.data;if(!v||v.source!=='ILGAM_SURVEY_BACKEND'||v.response_id!==submissionToken)return;if(v.ok===true){success();}else{$('#submissionNote').textContent='저장 서버가 오류를 반환했습니다. 다시 제출하지 말고 관리자에게 문의해 주세요.';}});
+$('#nextBtn').addEventListener('click',()=>{if(done||submitting||!validate(current))return;if(current===4){if(submissionToken)recheck();else submit();}else showStep(current+1);});$('#backBtn').addEventListener('click',()=>{if(!submitting&&current>0)showStep(current-1);});showStep(0);
 })();
