@@ -2,7 +2,7 @@
 'use strict';
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];const cfg=window.SURVEY_CONFIG||{};
 const BIDSETS=[{code:'A',low:500,first:1000,high:2000},{code:'B',low:1500,first:3000,high:6000},{code:'C',low:2500,first:5000,high:10000},{code:'D',low:3500,first:7000,high:14000}];
-const key='ilgam_bid_v1';let stored=sessionStorage.getItem(key);let choice=Number(stored);if(!Number.isInteger(choice)||choice<0||choice>3){const a=new Uint32Array(1);crypto.getRandomValues(a);choice=a[0]%4;sessionStorage.setItem(key,String(choice));}
+const key='ilgam_bid_v2';let stored=sessionStorage.getItem(key);let choice=stored===null?NaN:Number(stored);if(!Number.isInteger(choice)||choice<0||choice>3){const a=new Uint32Array(1);crypto.getRandomValues(a);choice=a[0]%4;sessionStorage.setItem(key,String(choice));}
 const bid=BIDSETS[choice];let current=0,submitting=false,done=false;let submissionToken='';
 function format(n){return n.toLocaleString('ko-KR')+'원';}
 function renderRadios(target,name,options){const el=$(target);el.innerHTML='';options.forEach(([v,t])=>{const label=document.createElement('label');label.className='choice';const inp=document.createElement('input');inp.type='radio';inp.name=name;inp.value=String(v);const span=document.createElement('span');span.textContent=t;label.append(inp,span);el.append(label);});}
